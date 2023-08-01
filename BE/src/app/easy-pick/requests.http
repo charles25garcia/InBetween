@@ -1,0 +1,4 @@
+
+### Get Easypick
+GET http://localhost:4800/game/geteasypick
+

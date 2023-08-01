@@ -1,0 +1,53 @@
+@import "global-variable-colors"
+
+::-webkit-scrollbar
+    width: 4px
+
+/* Track */
+::-webkit-scrollbar-track
+    background: #f1f1f1
+
+/* Handle */
+::-webkit-scrollbar-thumb
+    background: #888
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover
+    background: #3c3c3c
+
+h1, button
+    color: white
+
+.theme-background
+    background-color: #2c2b2b !important
+
+.theme-border-color
+    border-color: $global-border-color !important
+
+.theme-container
+    background-color: $global-container-bg
+    border: solid 1px $global-border-color
+
+.global-container-bg
+    background-color: $global-container-bg
+
+.theme-hover-item
+    &:hover
+        background-color: $global-hovered-border-color
+
+.theme-hover-text-item
+    &:hover
+        color: $global-hovered-border-color
+
+.theme-form-bg
+    background-color: #1d1d1d !important
+
+.theme-submit-button
+    &:hover
+        background-color: #a67b47
+
+.theme-submit-button[disabled]
+    opacity: 0.30
+    cursor: not-allowed
+    &:hover
+        background-color: transparent !important

@@ -1,0 +1,14 @@
+### Insert Request
+POST http://localhost:4800/withdrawal/request-chips
+Content-Type: application/json
+
+{
+    "userId": "ecb67cc6-1734-4b11-9f0d-fc8635dc296c",
+    "amount": 100
+}
+
+### Cancel Request
+POST http://localhost:4800/withdrawal/cancel-chips-request/9
+
+### Get Withdrawals By User Id
+GET http://localhost:4800/withdrawal/chips/9c379d64-23a2-430a-82e4-0e6ab916af32

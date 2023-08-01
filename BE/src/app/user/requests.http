@@ -1,0 +1,35 @@
+
+### Create Player
+POST http://localhost:4800/user/registerplayer
+Content-Type: application/json
+
+{
+    "fullName": "Arvi",
+    "email": "Arvi@gmail.com",
+    "password": "pass",
+    "contactNo": "123456789",
+    "username": "Arvi"
+}
+
+
+### Update Stats
+POST http://localhost:4800/user/update-stats
+Content-Type: application/json
+
+{
+    "userId": "f04dd53d-a345-4461-afdb-9a991a7d2cd2",
+    "isWinner": false
+}
+
+### Register Platinum
+POST http://localhost:4800/admin-user/create-platinum-user
+Content-Type: application/json
+
+{
+    "fullName": "Test Platiqnum",
+    "username": "TestPlatinaumq",
+    "email": "TestPlatinum@gmail.com"
+}
+
+### Get Withdrawals
+GET http://localhost:4800/admin-user/withdrawals/

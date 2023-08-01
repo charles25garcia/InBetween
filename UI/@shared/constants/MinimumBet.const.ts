@@ -1,0 +1,1 @@
+export const MinimumBetConst = 20;

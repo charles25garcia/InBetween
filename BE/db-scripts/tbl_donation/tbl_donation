@@ -1,0 +1,8 @@
+CREATE TABLE `inbetween-db`.`tbl_donation` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `donorUserId` VARCHAR(100) NOT NULL,
+  `doneeUserId` VARCHAR(100) NOT NULL,
+  `dateTime` DATETIME NULL,
+  `chips` DOUBLE NULL,
+  `status` CHAR(2) NULL,
+  PRIMARY KEY (`id`));

@@ -1,0 +1,37 @@
+
+### Start 
+POST http://localhost:4800/game/start
+
+### Stop
+POST http://localhost:4800/game/stop
+
+### Submit Chips
+POST http://localhost:4800/game/submit-chips-bet
+Content-Type: application/json
+
+{
+    "bets": [{"amount": 10, "type": 1}],
+    "userId":"f04dd53d-a345-4461-afdb-9a991a7d2cd2"
+}
+
+### Submit points
+POST http://localhost:4800/game/submit-points-bet
+Content-Type: application/json
+
+{
+    "bets": [{"amount": 10, "type": 1}],
+    "userId":"f04dd53d-a345-4461-afdb-9a991a7d2cd2"
+}
+
+### Lock Chips
+POST http://localhost:4800/game/lock-chips-bet
+Content-Type: application/json
+
+{
+    "bets": [{"amount": 400, "type": 1}],
+    "userId":"4ebbcc2a-6dbd-43fa-b5d0-e375b6fca7b1"
+}
+
+### Get Pot Bonus Dat
+GET http://localhost:4800/game/pot-bonus-data
+

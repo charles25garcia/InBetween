@@ -1,0 +1,75 @@
+image: google/cloud-sdk
+
+pipelines:
+  branches:
+    'dev':
+      - step:
+          name: Lint
+          script:
+            - echo 'Linting goes here'
+          # image: node:18
+          # script:
+          #   - npm install eslint --save-dev
+          #   - npm run lint
+      - step:
+          name: 'build and test'
+          deployment: dev
+          services:
+            - docker
+          script:
+            - export DOCKER_BUILDKIT=0
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            # - export CLOUD_SQL_CONNECTION_NAME=$(gcloud sql instances describe inbetween-384208:asia-east1:inbetween-dev-db --format='value(connectionName)')
+            - docker build --build-arg NODE_ENV=dev -t gcr.io/inbetween-384208/inbetween-backend-dev:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-backend-dev:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-backend-dev --image=gcr.io/inbetween-384208/inbetween-backend-dev:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --port=4800 --allow-unauthenticated --project=inbetween-384208 --set-cloudsql-instances=inbetween-384208:asia-east1:inbetween-dev-db --min-instances=1 --max-instances=10
+            #
+
+      - step:
+          name: 'Security Scan'
+          script:
+            - echo "Security scan goes here"
+    'qa':
+      - step:
+          name: 'deploy to qa'
+          deployment: qa
+          services:
+            - docker
+          script:
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            - export CLOUD_SQL_CONNECTION_NAME=$(gcloud sql instances describe inbetween-384208:asia-east1:inbetween-qa-db --format='value(connectionName)')
+            - docker build -t gcr.io/inbetween-384208/inbetween-backend-qa:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-backend-qa:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-backend-qa --image=gcr.io/inbetween-384208/inbetween-backend-qa:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --max-instances=10 --port=3000 --allow-unauthenticated --project=inbetween-384208 --add-cloudsql-instances=${CLOUD_SQL_CONNECTION_NAME} --set-env-vars DB_HOST=/cloudsql/${CLOUD_SQL_CONNECTION_NAME},DB_USER=qa-app,DB_PASS=KM323AZ$Oq8@
+      - step:
+          name: 'deploy to uat'
+          deployment: uat
+          trigger: manual
+          services:
+            - docker
+          script:
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            - export CLOUD_SQL_CONNECTION_NAME=$(gcloud sql instances describe inbetween-384208:asia-east1:inbetween-uat-db --format='value(connectionName)')
+            - docker build -t gcr.io/inbetween-384208/inbetween-backend-uat:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-backend-uat:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-backend-uat --image=gcr.io/inbetween-384208/inbetween-backend-uat:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --max-instances=10 --port=3000 --allow-unauthenticated --project=inbetween-384208 --add-cloudsql-instances=${CLOUD_SQL_CONNECTION_NAME} --set-env-vars DB_HOST=/cloudsql/${CLOUD_SQL_CONNECTION_NAME},DB_USER=uat-app,DB_PASS=3Yjwnv!876%9
+      - step:
+          name: 'deploy to prod'
+          deployment: prod
+          trigger: manual
+          services:
+            - docker
+          script:
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            - export CLOUD_SQL_CONNECTION_NAME=$(gcloud sql instances describe inbetween-384208:asia-east1:inbetween-prod-db --format='value(connectionName)')
+            - docker build -t gcr.io/inbetween-384208/inbetween-backend-master:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-backend-master:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-backend-prod --image=gcr.io/inbetween-384208/inbetween-backend-master:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --port=3000 --allow-unauthenticated --project=inbetween-384208 --add-cloudsql-instances=${CLOUD_SQL_CONNECTION_NAME} --set-env-vars DB_HOST=/cloudsql/${CLOUD_SQL_CONNECTION_NAME},DB_USER=prod-app,DB_PASS=#22rAq^KI78J

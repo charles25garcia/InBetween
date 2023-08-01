@@ -1,0 +1,9 @@
+
+### Get Deal History By userId
+GET http://localhost:4800/deal-history/user-deals/f437e5bf-a6a2-4f65-88ce-7de852259fb0
+
+### Get Deal Histories
+GET http://localhost:4800/deal-history/5
+
+### Get Total Deals
+GET http://localhost:4800/deal-history/total-chips-deals-today

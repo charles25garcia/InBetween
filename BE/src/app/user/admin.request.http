@@ -1,0 +1,16 @@
+
+### Get Users
+GET http://localhost:4800/admin-user
+
+
+### Manual With
+PUT http://localhost:4800/admin-user/manual-withdrawal
+Content-Type: application/json
+
+{
+    "userId": "asdasd",
+    "adminUserName": "admin",
+    "adminPassword": "pass",
+    "commissionAmount": 100,
+    "chips": 100
+}

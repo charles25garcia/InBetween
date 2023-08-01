@@ -1,0 +1,78 @@
+image: google/cloud-sdk:latest
+
+pipelines:
+  branches:
+    "dev":
+      # - step:
+      #     name: Lint
+      #     image: node:18
+      #     script:
+      #       - npm install eslint --save-dev
+      #       - npm run lint
+      # - step:
+      #     name: "initialize"
+      #     script:
+      #       - echo 'deploy to dev'
+      #       - echo $GCLOUD_SERVICE_KEY > key.json
+      #       - gcloud auth activate-service-account --key-file=key.json
+      #       - gcloud auth configure-docker
+      - step:
+          name: "build"
+          services:
+            - docker
+          script:
+            - export DOCKER_BUILDKIT=0
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            # - export CLOUD_SQL_CONNECTION_NAME=$(gcloud sql instances describe inbetween-384208:asia-east1:inbetween-dev-db --format='value(connectionName)')
+            - docker build --build-arg INBETWEEN_ENV=dev -t gcr.io/inbetween-384208/inbetween-frontend-dev:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-frontend-dev:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-frontend-dev --image=gcr.io/inbetween-384208/inbetween-frontend-dev:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --min-instances=1 --max-instances=10 --port=3000 --allow-unauthenticated --project=inbetween-384208
+      # - step:
+      #     name: "deploy"
+      #     deployment: dev
+
+      - step:
+          name: "Security Scan"
+          script:
+            - echo "Security scan goes here"
+    "qa":
+      - step:
+          name: "deploy to qa"
+          deployment: qa
+          services:
+            - docker
+          script:
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            - docker build -t gcr.io/inbetween-384208/inbetween-frontend-qa:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-frontend-qa:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-frontend-qa --image=gcr.io/inbetween-384208/inbetween-frontend-qa:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --max-instances=10 --port=3000 --allow-unauthenticated --project=inbetween-384208
+      - step:
+          name: "deploy to uat"
+          deployment: uat
+          trigger: manual
+          services:
+            - docker
+          script:
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            - docker build -t gcr.io/inbetween-384208/inbetween-frontend-uat:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-frontend-uat:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-frontend-uat --image=gcr.io/inbetween-384208/inbetween-frontend-uat:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --max-instances=10 --port=3000 --allow-unauthenticated --project=inbetween-384208
+      - step:
+          name: "deploy to prod"
+          deployment: prod
+          trigger: manual
+          services:
+            - docker
+          script:
+            - echo $GCLOUD_SERVICE_KEY > key.json
+            - gcloud auth activate-service-account --key-file=key.json
+            - gcloud auth configure-docker
+            - docker build -t gcr.io/inbetween-384208/inbetween-frontend-master:$BITBUCKET_COMMIT .
+            - docker push gcr.io/inbetween-384208/inbetween-frontend-master:$BITBUCKET_COMMIT
+            - gcloud run deploy inbetween-frontend-prod --image=gcr.io/inbetween-384208/inbetween-frontend-master:$BITBUCKET_COMMIT --platform=managed --region=asia-east1 --port=3000 --allow-unauthenticated --project=inbetween-384208

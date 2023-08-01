@@ -1,0 +1,15 @@
+export enum CardLabelEnum {
+  ACE = 'A',
+  DOS = '2',
+  TRES = '3',
+  KWATRO = '4',
+  SINKO = '5',
+  SEIS = '6',
+  SIENTE = '7',
+  OCHO = '8',
+  NUEVE = '9',
+  DIEZ = '10',
+  JACK = 'J',
+  QUEEN = 'Q',
+  KING = 'K',
+}

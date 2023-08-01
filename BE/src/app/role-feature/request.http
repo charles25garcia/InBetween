@@ -1,0 +1,5 @@
+### Get All Role Features
+GET http://localhost:4800/role-feature/
+
+### Get Feature by RoleId
+GET http://localhost:4800/role-feature/role/1

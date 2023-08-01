@@ -1,0 +1,10 @@
+
+### DELETE CONFIG
+DELETE http://localhost:4800/winstreak-bonus-config/delete-configs
+Content-Type: application/json
+
+{
+    "ids": [
+        5
+    ]
+}

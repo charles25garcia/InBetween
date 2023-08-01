@@ -1,0 +1,4 @@
+
+### Get Commission History
+GET http://localhost:4800/commission-history/get-commissions?userRole=2&referralId=test123
+

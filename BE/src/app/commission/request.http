@@ -1,0 +1,2 @@
+### Get Commissions by userId
+GET  http://localhost:4800/commission/user-commission/f437e5bf-a6a2-4f65-88ce-7de852259fb0

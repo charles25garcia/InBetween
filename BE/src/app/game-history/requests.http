@@ -1,0 +1,15 @@
+
+### Get History
+GET http://localhost:4800/game-history/get-histories
+
+
+### Create History
+POST http://localhost:4800/game-history/create-history
+Content-Type: application/json
+
+{
+    "winning_bet": "InBetween",
+    "first_card": "King of diamonds",
+    "middle_card": "Queen of diamonds",
+    "last_card": "Jack of diamonds"
+}
